@@ -1,6 +1,17 @@
 # Change Log - @uifabric/example-app-base
 
-This log was last generated on Fri, 26 May 2017 10:21:03 GMT and should not be manually modified.
+This log was last generated on Mon, 29 May 2017 22:46:39 GMT and should not be manually modified.
+
+## 2.0.0
+Mon, 29 May 2017 22:46:39 GMT
+
+### Breaking changes
+
+- All references to fabric-core removed.
+
+### Patches
+
+- Updated dependency to Fabric Core 7
 
 ## 1.3.14
 Fri, 26 May 2017 10:21:03 GMT

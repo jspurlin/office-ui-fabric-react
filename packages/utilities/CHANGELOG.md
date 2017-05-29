@@ -1,6 +1,18 @@
 # Change Log - @uifabric/utilities
 
-This log was last generated on Fri, 26 May 2017 10:21:03 GMT and should not be manually modified.
+This log was last generated on Mon, 29 May 2017 22:46:39 GMT and should not be manually modified.
+
+## 2.0.0
+Mon, 29 May 2017 22:46:39 GMT
+
+### Breaking changes
+
+- memoize/memoizeFunction: memoize converted to a decorator, memoizeFunction is now for memoizing functions.
+- getLangauge/setLanguage: new apis added for getting/setting the language normally specified on the html lang attribute.
+
+### Patches
+
+- Introduce prop-types instead of React.PropTypes
 
 ## 1.10.2
 Fri, 26 May 2017 10:21:03 GMT
