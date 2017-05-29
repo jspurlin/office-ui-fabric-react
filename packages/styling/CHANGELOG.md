@@ -1,6 +1,13 @@
 # Change Log - @uifabric/styling
 
-This log was last generated on Thu, 18 May 2017 10:09:58 GMT and should not be manually modified.
+This log was last generated on Mon, 29 May 2017 23:05:58 GMT and should not be manually modified.
+
+## 0.3.0
+Mon, 29 May 2017 23:05:58 GMT
+
+### Minor changes
+
+- Major updates to mergeStyles and other various utilities. Updating fonts to follow latest fabric-core language fallbacks.
 
 ## 0.2.0
 Thu, 18 May 2017 10:09:58 GMT
