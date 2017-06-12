@@ -53,6 +53,12 @@ export const AppDefinition: IAppDefinition = {
           url: '#/examples/choicegroup'
         },
         {
+          component: require<any>('../components/ComboBox/ComboBoxPage').ComboBoxPage,
+          key: 'ComboBox',
+          name: 'ComboBox',
+          url: '#/examples/ComboBox'
+        },
+        {
           component: require<any>('../components/CommandBar/CommandBarPage').CommandBarPage,
           key: 'CommandBar',
           name: 'CommandBar',
@@ -201,12 +207,6 @@ export const AppDefinition: IAppDefinition = {
           key: 'SearchBox',
           name: 'SearchBox',
           url: '#/examples/searchbox'
-        },
-        {
-          component: require<any>('../components/SpinButton/SpinButtonPage').SpinButtonPage,
-          key: 'SpinButton',
-          name: 'SpinButton',
-          url: '#/examples/spinbutton'
         },
         {
           component: require<any>('../components/Spinner/SpinnerPage').SpinnerPage,

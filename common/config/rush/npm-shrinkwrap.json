@@ -805,18 +805,14 @@
           "bundled": true
         },
         "readable-stream": {
-          "version": "2.2.11",
+          "version": "2.2.10",
           "bundled": true,
           "dependencies": {
             "string_decoder": {
-              "version": "1.0.2",
+              "version": "1.0.1",
               "bundled": true
             }
           }
-        },
-        "safe-buffer": {
-          "version": "5.0.1",
-          "bundled": true
         },
         "stream-browserify": {
           "version": "2.0.1",
@@ -963,18 +959,14 @@
           "bundled": true
         },
         "readable-stream": {
-          "version": "2.2.11",
+          "version": "2.2.10",
           "bundled": true,
           "dependencies": {
             "string_decoder": {
-              "version": "1.0.2",
+              "version": "1.0.1",
               "bundled": true
             }
           }
-        },
-        "safe-buffer": {
-          "version": "5.0.1",
-          "bundled": true
         },
         "source-map": {
           "version": "0.1.43",
@@ -1107,18 +1099,14 @@
           "bundled": true
         },
         "readable-stream": {
-          "version": "2.2.11",
+          "version": "2.2.10",
           "bundled": true,
           "dependencies": {
             "string_decoder": {
-              "version": "1.0.2",
+              "version": "1.0.1",
               "bundled": true
             }
           }
-        },
-        "safe-buffer": {
-          "version": "5.0.1",
-          "bundled": true
         },
         "stream-browserify": {
           "version": "2.0.1",
@@ -1232,18 +1220,14 @@
           "bundled": true
         },
         "readable-stream": {
-          "version": "2.2.11",
+          "version": "2.2.10",
           "bundled": true,
           "dependencies": {
             "string_decoder": {
-              "version": "1.0.2",
+              "version": "1.0.1",
               "bundled": true
             }
           }
-        },
-        "safe-buffer": {
-          "version": "5.0.1",
-          "bundled": true
         },
         "source-map": {
           "version": "0.1.43",

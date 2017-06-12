@@ -1,13 +1,6 @@
 # Change Log - @uifabric/styling
 
-This log was last generated on Fri, 09 Jun 2017 10:10:47 GMT and should not be manually modified.
-
-## 0.7.2
-Fri, 09 Jun 2017 10:10:47 GMT
-
-### Patches
-
-- Update the version of rtl-css-js used to get latest bug fixes
+This log was last generated on Thu, 08 Jun 2017 10:20:07 GMT and should not be manually modified.
 
 ## 0.7.1
 Thu, 08 Jun 2017 10:20:07 GMT
