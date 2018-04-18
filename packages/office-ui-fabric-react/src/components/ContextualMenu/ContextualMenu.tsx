@@ -99,8 +99,6 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
   // private _processingTouch: boolean;
   // private _lastTouchTimeoutId: number | undefined;
 
-  private _splitButtonContainers: Map<string, HTMLDivElement>;
-
   private _adjustedFocusZoneProps: IFocusZoneProps;
 
   constructor(props: IContextualMenuProps) {
@@ -119,7 +117,6 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
 
     this._isFocusingPreviousElement = false;
     this._isScrollIdle = true;
-    this._splitButtonContainers = new Map();
   }
 
   public dismiss = (ev?: any, dismissAll?: boolean) => {
