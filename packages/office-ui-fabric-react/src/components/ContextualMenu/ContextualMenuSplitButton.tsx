@@ -42,8 +42,8 @@ export interface IContextualMenuSplitButtonProps extends React.Props<ContextualM
   onItemMouseDown?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>) => void;
   executeItemClick?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => void;
   onItemClick?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => void;
-  onItemClickBase?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, target: HTMLElement) => void;
-  onItemKeyDown?: (item: IContextualMenuItem, ev: React.KeyboardEvent<HTMLElement>) => void;
+  onItemClickBase?: (ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, target: HTMLElement) => void;
+  onItemKeyDown?: (ev: React.KeyboardEvent<HTMLElement>) => void;
 }
 export interface IContextualMenuSplitButtonState {
   menuProps?: IContextualMenuProps | null;
@@ -59,7 +59,7 @@ export class ContextualMenuSplitButton extends BaseComponent<IContextualMenuSpli
   public componentDidMount() {
     if (this._splitButton && 'onpointerdown' in this._splitButton) {
       this._events.on(this._splitButton, 'pointerdown', this._onPointerDown, true);
-    };
+    }
   }
 
   public render(): JSX.Element | null {
@@ -93,7 +93,7 @@ export class ContextualMenuSplitButton extends BaseComponent<IContextualMenuSpli
         onMouseMove={ onItemMouseMove ? this._onItemMouseMove.bind(this, { ...item, subMenuProps: null, items: null }) : undefined }
         onKeyDown={ this._onItemKeyDown.bind(this, item) }
         onClick={ this._executeItemClick.bind(this, item) }
-        onTouchStart={ this._onTouchStart.bind(this) }
+        onTouchStart={ this._onTouchStart }
         tabIndex={ 0 }
         data-is-focusable={ true }
       >
@@ -209,7 +209,7 @@ export class ContextualMenuSplitButton extends BaseComponent<IContextualMenuSpli
 
   private _onItemMouseEnter(item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>) {
     if (this.props.onItemMouseEnter) {
-      this.props.onItemMouseEnter(item, ev, this._splitButton)
+      this.props.onItemMouseEnter(item, ev, this._splitButton);
     }
   }
 
@@ -252,7 +252,7 @@ export class ContextualMenuSplitButton extends BaseComponent<IContextualMenuSpli
       ev.preventDefault();
       ev.stopPropagation();
     } else if (onItemKeyDown) {
-      onItemKeyDown(item, ev);
+      onItemKeyDown(ev);
     }
   }
 }

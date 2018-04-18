@@ -156,7 +156,7 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
       // This slight delay is required so that we can unwind the stack, const react try to mess with focus, and then
       // apply the correct focus. Without the setTimeout, we end up focusing the correct thing, and then React wants
       // to reset the focus back to the thing it thinks should have been focused.
-      this._async.setTimeout(() => { this._previousActiveElement!.focus() }, 0);
+      this._async.setTimeout(() => { this._previousActiveElement!.focus(); }, 0);
     }
 
     if (this.props.onMenuDismissed) {
@@ -602,14 +602,14 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
         hasCheckmarks={ hasCheckmarks }
         hasIcons={ hasIcons }
         contextualMenuItemAs={ contextualMenuItemAs }
-        onItemMouseEnter={ this._onItemMouseEnterBase.bind(this) }
-        onItemMouseLeave={ this._onMouseItemLeave.bind(this) }
-        onItemMouseMove={ this._onItemMouseMoveBase.bind(this) }
-        onItemMouseDown={ this._onItemMouseDown.bind(this) }
-        executeItemClick={ this._executeItemClick.bind(this) }
-        onItemClick={ this._onItemClick.bind(this) }
-        onItemClickBase={ this._onItemClickBase.bind(this) }
-        onItemKeyDown={ this._onItemKeyDown.bind(this) }
+        onItemMouseEnter={ this._onItemMouseEnterBase.bind(this, item) }
+        onItemMouseLeave={ this._onMouseItemLeave.bind(this, item) }
+        onItemMouseMove={ this._onItemMouseMoveBase.bind(this, item) }
+        onItemMouseDown={ this._onItemMouseDown.bind(this, item) }
+        executeItemClick={ this._executeItemClick.bind(this, item) }
+        onItemClick={ this._onItemClick.bind(this, item) }
+        onItemClickBase={ (ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, target: HTMLElement) => this._onItemClickBase(item, ev, target) }
+        onItemKeyDown={ (ev: React.KeyboardEvent<HTMLElement>) => this._onItemKeyDown(item, ev) }
         data-is-focusable={ true }
       />
     );

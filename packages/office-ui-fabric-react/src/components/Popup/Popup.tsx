@@ -130,7 +130,7 @@ export class Popup extends BaseComponent<IPopupProps, IPopupState> {
   }
 
   private _onBlur(ev: FocusEvent) {
-    if (ev.relatedTarget != null) {
+    if (ev.relatedTarget !== null) {
       this._containsFocus = false;
     }
   }
