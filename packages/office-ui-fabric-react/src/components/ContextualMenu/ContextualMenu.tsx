@@ -147,21 +147,6 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
     if (this.props.onMenuOpened) {
       this.props.onMenuOpened(this.props);
     }
-
-    // Due to restraints caused by React 16 where we no can no longer call the ref values of
-    // children component with their own render function before componentDidMount we have to
-    // use this setTimeout hack to have access to ref. The correct approach to solve this
-    // problem is to create a component for the split button and then have it add its own event listener.
-    // This is logged on Issue #4522
-    // this._async.setTimeout(() => {
-    //   // if (this._splitButtonContainers) {
-    //   //   this._splitButtonContainers.forEach((splitButtonContainer: HTMLDivElement) => {
-    //   //     if ('onpointerdown' in splitButtonContainer) {
-    //   //       this._events.on(splitButtonContainer, 'pointerdown', this._onPointerDown, true);
-    //   //     }
-    //   //   });
-    //   // }
-    // }, 0);
   }
 
   // Invoked immediately before a component is unmounted from the DOM.
@@ -665,28 +650,6 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
     }
   }
 
-  // private _handleTouchAndPointerEvent() {
-  //   // If we already have a command that would open/close the menu from hover, we'll
-  //   // cancel that async event and continue with our pointeer/touch event
-  //   if (this._enterTimerId !== undefined) {
-  //     this._async.clearTimeout(this._enterTimerId);
-  //     this._enterTimerId = undefined;
-  //   }
-
-  //   // If we already have an existing timeeout from a previous touch/pointer event
-  //   // cancel that timeout so we can set a nwe one.
-  //   if (this._lastTouchTimeoutId !== undefined) {
-  //     this._async.clearTimeout(this._lastTouchTimeoutId);
-  //     this._lastTouchTimeoutId = undefined;
-  //   }
-  //   this._processingTouch = true;
-
-  //   this._lastTouchTimeoutId = this._async.setTimeout(() => {
-  //     this._processingTouch = false;
-  //     this._lastTouchTimeoutId = undefined;
-  //   }, TouchIdleDelay);
-  // }
-
   /**
    * Checks if the submenu should be closed
    */
@@ -846,23 +809,15 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
     this._onItemClickBase(item, ev, ev.currentTarget as HTMLElement);
   }
 
-  // private _onSplitItemClick(item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>) {
-  //   // get the whole splitButton container to base the menu off of
-  //   const splitButtonContainer = this._splitButtonContainers.get(item.key);
-
-  //   // Cancel a async menu item hover timeout action from being taken and instead
-  //   // just trigger the click event instead.
-  //   if (this._enterTimerId !== undefined) {
-  //     this._async.clearTimeout(this._enterTimerId);
-  //     this._enterTimerId = undefined;
-  //   }
-  //   this._onItemClickBase(item, ev,
-  //     (splitButtonContainer ? splitButtonContainer : ev.currentTarget) as HTMLElement);
-  // }
-
   private _onItemClickBase(item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, target: HTMLElement) {
     const items = getSubmenuItems(item);
 
+    // Cancel a async menu item hover timeout action from being taken and instead
+    // just trigger the click event instead.
+    if (this._enterTimerId !== undefined) {
+      this._async.clearTimeout(this._enterTimerId);
+      this._enterTimerId = undefined;
+    }
     if (!hasSubmenu(item) && (!items || !items.length)) { // This is an item without a menu. Click it.
       this._executeItemClick(item, ev);
     } else {

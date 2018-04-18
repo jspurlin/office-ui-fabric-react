@@ -109,26 +109,14 @@ export class ContextualMenuSplitButton extends BaseComponent<IContextualMenuSpli
     );
   }
 
-  private _onItemMouseEnter(item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>) {
-    if (this.props.onItemMouseEnter) {
-      this.props.onItemMouseEnter(item, ev, this._splitButton)
-    }
-  }
-
-  private _onItemMouseMove(item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>) {
-    if (this.props.onItemMouseMove) {
-      this.props.onItemMouseMove(item, ev, this._splitButton);
-    }
-  }
-
   private _renderSplitPrimaryButton(item: IContextualMenuItem, classNames: IMenuItemClassNames, index: number, hasCheckmarks: boolean, hasIcons: boolean) {
     const isChecked: boolean | null | undefined = getIsChecked(item);
     const canCheck: boolean = isChecked !== null;
     const defaultRole = canCheck ? 'menuitemcheckbox' : 'menuitem';
     const {
-        contextualMenuItemAs: ChildrenRenderer = ContextualMenuItem,
+      contextualMenuItemAs: ChildrenRenderer = ContextualMenuItem,
       onItemClick
-      } = this.props;
+    } = this.props;
 
     const itemProps = {
       key: item.key,
@@ -161,7 +149,7 @@ export class ContextualMenuSplitButton extends BaseComponent<IContextualMenuSpli
       onItemMouseLeave,
       onItemMouseDown,
       onItemMouseMove
-     } = this.props;
+    } = this.props;
 
     // With the introduction of touch support for split buttons. We would now open sub-menus by touching anywhere
     // on the split button but we can now longer trigger the primary action. This is correct from an accessibility
@@ -205,17 +193,8 @@ export class ContextualMenuSplitButton extends BaseComponent<IContextualMenuSpli
   }
 
   private _handleTouchAndPointerEvent() {
-    // If we already have a command that would open/close the menu from hover, we'll
-    // cancel that async event and continue with our pointeer/touch event
-
-    // TODO investigate, this will be a problem when we call onhover code of the split button menu item
-    /*if (this._enterTimerId !== undefined) {
-      this._async.clearTimeout(this._enterTimerId);
-      this._enterTimerId = undefined;
-    }*/
-
     // If we already have an existing timeeout from a previous touch/pointer event
-    // cancel that timeout so we can set a nwe one.
+    // cancel that timeout so we can set a new one.
     if (this._lastTouchTimeoutId !== undefined) {
       this._async.clearTimeout(this._lastTouchTimeoutId);
       this._lastTouchTimeoutId = undefined;
@@ -228,28 +207,25 @@ export class ContextualMenuSplitButton extends BaseComponent<IContextualMenuSpli
     }, TouchIdleDelay);
   }
 
-  // unique and needed to be kept for itself
+  private _onItemMouseEnter(item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>) {
+    if (this.props.onItemMouseEnter) {
+      this.props.onItemMouseEnter(item, ev, this._splitButton)
+    }
+  }
+
+  private _onItemMouseMove(item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>) {
+    if (this.props.onItemMouseMove) {
+      this.props.onItemMouseMove(item, ev, this._splitButton);
+    }
+  }
+
   private _onSplitItemClick(item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>) {
-    // get the whole splitButton container to base the menu off of
-    // const splitButtonContainer = this._splitButtonContainers.get(item.key);
-
-    // Cancel a async menu item hover timeout action from being taken and instead
-    // just trigger the click event instead.
-
-    // TODO does onItemClickBase need to do this?
-    /*if (this._enterTimerId !== undefined) {
-      this._async.clearTimeout(this._enterTimerId);
-      this._enterTimerId = undefined;
-    }*/
-
     const { onItemClickBase } = this.props;
-    // TODO look into using forward ref
     if (onItemClickBase) {
       onItemClickBase(item, ev, (this._splitButton ? this._splitButton : ev.currentTarget) as HTMLElement);
     }
   }
 
-  // Needed for callback logic
   private _executeItemClick(item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) {
     const {
       onItemClick,
@@ -259,6 +235,7 @@ export class ContextualMenuSplitButton extends BaseComponent<IContextualMenuSpli
     if (item.disabled || item.isDisabled) {
       return;
     }
+
     if (this._processingTouch && onItemClick) {
       return onItemClick(item, ev);
     }
@@ -268,7 +245,6 @@ export class ContextualMenuSplitButton extends BaseComponent<IContextualMenuSpli
     }
   }
 
-  // original no need to change
   private _onItemKeyDown(item: any, ev: React.KeyboardEvent<HTMLElement>) {
     const { onItemKeyDown } = this.props;
     if (ev.which === KeyCodes.enter) {
