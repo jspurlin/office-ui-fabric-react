@@ -116,7 +116,7 @@ export class Popup extends BaseComponent<IPopupProps, IPopupState> {
     let needsVerticalScrollBar = false;
     if (this._root && this._root.value && this._root.value.firstElementChild) {
       needsVerticalScrollBar = this._root.value.clientHeight > 0
-          && this._root.value.firstElementChild.clientHeight > this._root.value.clientHeight;
+        && this._root.value.firstElementChild.clientHeight > this._root.value.clientHeight;
     }
     if (this.state.needsVerticalScrollBar !== needsVerticalScrollBar) {
       this.setState({
@@ -129,7 +129,9 @@ export class Popup extends BaseComponent<IPopupProps, IPopupState> {
     this._containsFocus = true;
   }
 
-  private _onBlur() {
-    this._containsFocus = false;
+  private _onBlur(ev: FocusEvent) {
+    if (ev.relatedTarget != null) {
+      this._containsFocus = false;
+    }
   }
 }
