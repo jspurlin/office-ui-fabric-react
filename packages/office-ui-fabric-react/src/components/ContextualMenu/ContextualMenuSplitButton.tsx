@@ -175,7 +175,7 @@ export class ContextualMenuSplitButton extends BaseComponent<IContextualMenuSpli
   }
 
   private _handleTouchAndPointerEvent() {
-    // If we already have an existing timeeout from a previous touch/pointer event
+    // If we already have an existing timeout from a previous touch/pointer event
     // cancel that timeout so we can set a new one.
     if (this._lastTouchTimeoutId !== undefined) {
       this._async.clearTimeout(this._lastTouchTimeoutId);
