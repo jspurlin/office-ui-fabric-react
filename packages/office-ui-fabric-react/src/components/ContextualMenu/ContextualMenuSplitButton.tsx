@@ -25,26 +25,8 @@ import { ContextualMenuItem } from './ContextualMenuItem';
 import { getIsChecked, isItemDisabled } from '../../utilities/contextualMenu/index';
 import { VerticalDivider } from '../../Divider';
 import { IContextualMenuItemProps } from './ContextualMenuItem.types';
+import { IContextualMenuSplitButtonProps } from './ContextualMenuSplitButton.types';
 
-export interface IContextualMenuSplitButtonProps extends React.Props<ContextualMenuSplitButton> {
-  componentRef?: (component: ContextualMenuSplitButton | null) => void;
-  item: IContextualMenuItem;
-  classNames: IMenuItemClassNames;
-  index: number;
-  focusableElementIndex: number;
-  totalItemCount: number;
-  hasCheckmarks?: boolean;
-  hasIcons?: boolean;
-  contextualMenuItemAs?: React.ComponentClass<IContextualMenuItemProps> | React.StatelessComponent<IContextualMenuItemProps>;
-  onItemMouseEnter?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>, target: HTMLElement) => boolean | void;
-  onItemMouseLeave?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>) => void;
-  onItemMouseMove?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>, target: HTMLElement) => void;
-  onItemMouseDown?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>) => void;
-  executeItemClick?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => void;
-  onItemClick?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => void;
-  onItemClickBase?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, target: HTMLElement) => void;
-  onItemKeyDown?: (item: IContextualMenuItem, ev: React.KeyboardEvent<HTMLElement>) => void;
-}
 export interface IContextualMenuSplitButtonState {
   menuProps?: IContextualMenuProps | null;
 }
