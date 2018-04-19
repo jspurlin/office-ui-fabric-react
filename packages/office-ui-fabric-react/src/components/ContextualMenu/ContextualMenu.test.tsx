@@ -197,7 +197,7 @@ describe('ContextualMenu', () => {
       },
     ];
 
-    const contextualMenu = ReactTestUtils.renderIntoDocument<ContextualMenu>(
+    ReactTestUtils.renderIntoDocument<ContextualMenu>(
       <ContextualMenu
         items={ items }
       />

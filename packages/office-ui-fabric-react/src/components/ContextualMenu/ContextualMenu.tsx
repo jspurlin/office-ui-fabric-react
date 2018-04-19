@@ -6,8 +6,7 @@ import {
   IMenuItemClassNames,
   IContextualMenuClassNames,
   getContextualMenuClassNames,
-  getItemClassNames,
-  getSplitButtonVerticalDividerClassNames
+  getItemClassNames
 } from './ContextualMenu.classNames';
 import {
   BaseComponent,
@@ -31,9 +30,6 @@ import { hasSubmenu, getIsChecked, isItemDisabled } from '../../utilities/contex
 import { withResponsiveMode, ResponsiveMode } from '../../utilities/decorators/withResponsiveMode';
 import { Callout } from '../../Callout';
 import { IIconProps } from '../../Icon';
-import {
-  VerticalDivider
-} from '../../Divider';
 import { ContextualMenuItem } from './ContextualMenuItem';
 import { ContextualMenuSplitButton } from './ContextualMenuSplitButton';
 
@@ -72,7 +68,6 @@ export function canAnyMenuItemsCheck(items: IContextualMenuItem[]): boolean {
 }
 
 const NavigationIdleDelay = 250 /* ms */;
-const TouchIdleDelay = 500; /* ms */
 
 @customizable('ContextualMenu', ['theme'])
 @withResponsiveMode
@@ -132,20 +127,29 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
       const newTarget = newProps.target;
       this._setTargetWindowAndElement(newTarget!);
     }
+    if (newProps.hidden !== this.props.hidden) {
+      if (newProps.hidden) {
+        this._onMenuClosed();
+      } else {
+        this._onMenuOpened();
+        this._previousActiveElement = this._targetWindow ? this._targetWindow.document.activeElement as HTMLElement : null;
+      }
+    }
   }
 
   // Invoked once, both on the client and server, immediately before the initial rendering occurs.
   public componentWillMount() {
     const target = this.props.target;
     this._setTargetWindowAndElement(target!);
-    this._previousActiveElement = this._targetWindow ? this._targetWindow.document.activeElement as HTMLElement : null;
+    if (!this.props.hidden) {
+      this._previousActiveElement = this._targetWindow ? this._targetWindow.document.activeElement as HTMLElement : null;
+    }
   }
 
   // Invoked once, only on the client (not on the server), immediately after the initial rendering occurs.
   public componentDidMount() {
-    this._events.on(this._targetWindow, 'resize', this.dismiss);
-    if (this.props.onMenuOpened) {
-      this.props.onMenuOpened(this.props);
+    if (!this.props.hidden) {
+      this._onMenuOpened();
     }
   }
 
@@ -156,7 +160,8 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
       // This slight delay is required so that we can unwind the stack, const react try to mess with focus, and then
       // apply the correct focus. Without the setTimeout, we end up focusing the correct thing, and then React wants
       // to reset the focus back to the thing it thinks should have been focused.
-      this._async.setTimeout(() => { this._previousActiveElement!.focus(); }, 0);
+      // Note: Cannot be replaced by this._async.setTimout because those will be removed by the time this is called.
+      setTimeout(() => { this._previousActiveElement && this._previousActiveElement!.focus(); }, 0);
     }
 
     if (this.props.onMenuDismissed) {
@@ -269,6 +274,7 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
           onScroll={ this._onScroll }
           bounds={ bounds }
           directionalHintFixed={ directionalHintFixed }
+          hidden={ this.props.hidden }
         >
           <div
             role='menu'
@@ -313,6 +319,16 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
     } else {
       return null;
     }
+  }
+
+  private _onMenuOpened() {
+    this._events.on(this._targetWindow, 'resize', this.dismiss);
+    this.props.onMenuOpened && this.props.onMenuOpened(this.props);
+  }
+
+  private _onMenuClosed() {
+    this._events.off(this._targetWindow, 'resize', this.dismiss);
+    this._previousActiveElement && this._async.setTimeout(() => { this._previousActiveElement && this._previousActiveElement!.focus(); }, 0);
   }
 
   /**
@@ -490,9 +506,9 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
           rel={ anchorRel }
           className={ classNames.root }
           role='menuitem'
-          aria-owns={ item.key === expandedMenuItemKey ? subMenuId : null }
-          aria-haspopup={ itemHasSubmenu || null }
-          aria-expanded={ itemHasSubmenu ? item.key === expandedMenuItemKey : null }
+          aria-owns={ item.key === expandedMenuItemKey ? subMenuId : undefined }
+          aria-haspopup={ itemHasSubmenu || undefined }
+          aria-expanded={ itemHasSubmenu ? item.key === expandedMenuItemKey : undefined }
           aria-posinset={ focusableElementIndex + 1 }
           aria-setsize={ totalItemCount }
           aria-disabled={ isItemDisabled(item) }
@@ -553,10 +569,10 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
       href: item.href,
       title: item.title,
       'aria-label': ariaLabel,
-      'aria-haspopup': itemHasSubmenu || null,
-      'aria-owns': item.key === expandedMenuItemKey ? subMenuId : null,
-      'aria-expanded': itemHasSubmenu ? item.key === expandedMenuItemKey : null,
-      'aria-checked': isChecked,
+      'aria-haspopup': itemHasSubmenu || undefined,
+      'aria-owns': item.key === expandedMenuItemKey ? subMenuId : undefined,
+      'aria-expanded': itemHasSubmenu ? item.key === expandedMenuItemKey : undefined,
+      'aria-checked': !!isChecked,
       'aria-posinset': focusableElementIndex + 1,
       'aria-setsize': totalItemCount,
       'aria-disabled': isItemDisabled(item),
@@ -566,8 +582,8 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
 
     return (
       <button
-        { ...buttonNativeProperties }
-        { ...itemButtonProperties }
+        { ...buttonNativeProperties as React.ButtonHTMLAttributes<HTMLButtonElement> }
+        { ...itemButtonProperties as React.ButtonHTMLAttributes<HTMLButtonElement> }
       >
         <ChildrenRenderer
           item={ item }
@@ -629,21 +645,6 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
       ev.preventDefault();
       ev.stopPropagation();
       this.dismiss(ev);
-    }
-  }
-
-  private _onTouchStart: () => void = () => {
-    if (this._host && !('onpointerdown' in this._host)) {
-      // this._handleTouchAndPointerEvent();
-    }
-  }
-
-  private _onPointerDown(ev: PointerEvent) {
-    if (ev.pointerType === 'touch') {
-      // this._handleTouchAndPointerEvent();
-
-      ev.preventDefault();
-      ev.stopImmediatePropagation();
     }
   }
 
@@ -722,7 +723,9 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
 
     const targetElement = ev.currentTarget as HTMLElement;
 
-    if (!this._isScrollIdle || targetElement === this._targetWindow.document.activeElement as HTMLElement) {
+    if (!this._isScrollIdle ||
+      this._enterTimerId !== undefined ||
+      targetElement === this._targetWindow.document.activeElement as HTMLElement) {
       return;
     }
 

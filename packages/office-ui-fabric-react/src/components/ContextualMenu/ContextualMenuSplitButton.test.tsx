@@ -42,7 +42,6 @@ function getMenuItemClassNames(): IMenuItemClassNames {
     subMenuIcon: 'subMenuIcon',
     label: 'label',
     splitContainer: 'splitContainer',
-    splitContainerFocus: 'splitContainerFocus',
     splitPrimary: 'splitPrimary',
     splitMenu: 'splitMenu',
     linkContentMenu: 'linkContentMenu',

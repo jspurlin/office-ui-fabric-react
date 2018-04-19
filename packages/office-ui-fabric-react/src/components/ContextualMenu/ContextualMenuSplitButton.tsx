@@ -1,35 +1,23 @@
 import * as React from 'react';
 import {
   BaseComponent,
-  IRenderFunction,
-  anchorProperties,
   assign,
   buttonProperties,
-  getId,
   getNativeProps,
-  KeyCodes,
-  createRef
+  KeyCodes
 } from '../../Utilities';
-import { Icon } from '../../Icon';
-import { DirectionalHint } from '../../common/DirectionalHint';
-import { ContextualMenu, IContextualMenuProps, IContextualMenuItem } from '../../ContextualMenu';
+import { IContextualMenuItem } from '../../ContextualMenu';
 import {
   IMenuItemClassNames,
-  IContextualMenuClassNames,
-  getContextualMenuClassNames,
-  getItemClassNames,
   getSplitButtonVerticalDividerClassNames
 } from './ContextualMenu.classNames';
 import { ContextualMenuItem } from './ContextualMenuItem';
 
 import { getIsChecked, isItemDisabled } from '../../utilities/contextualMenu/index';
 import { VerticalDivider } from '../../Divider';
-import { IContextualMenuItemProps } from './ContextualMenuItem.types';
 import { IContextualMenuSplitButtonProps } from './ContextualMenuSplitButton.types';
 
-export interface IContextualMenuSplitButtonState {
-  menuProps?: IContextualMenuProps | null;
-}
+export interface IContextualMenuSplitButtonState { }
 
 const TouchIdleDelay = 500; /* ms */
 
@@ -53,7 +41,6 @@ export class ContextualMenuSplitButton extends BaseComponent<IContextualMenuSpli
       totalItemCount,
       hasCheckmarks,
       hasIcons,
-      onItemMouseEnter,
       onItemMouseLeave,
       onItemMouseMove
     } = this.props;
@@ -63,7 +50,7 @@ export class ContextualMenuSplitButton extends BaseComponent<IContextualMenuSpli
         ref={ (splitButton: HTMLDivElement) => this._splitButton = splitButton }
         role={ 'button' }
         aria-labelledby={ item.ariaLabel }
-        className={ classNames.splitContainerFocus }
+        className={ classNames.splitContainer }
         aria-disabled={ isItemDisabled(item) }
         aria-haspopup={ true }
         aria-describedby={ item.ariaDescription }
@@ -79,14 +66,9 @@ export class ContextualMenuSplitButton extends BaseComponent<IContextualMenuSpli
         tabIndex={ 0 }
         data-is-focusable={ true }
       >
-        <span
-          aria-hidden={ true }
-          className={ classNames.splitContainer }
-        >
-          { this._renderSplitPrimaryButton(item, classNames, index, hasCheckmarks!, hasIcons!) }
-          { this._renderSplitDivider(item) }
-          { this._renderSplitIconButton(item, classNames, index) }
-        </span>
+        { this._renderSplitPrimaryButton(item, classNames, index, hasCheckmarks!, hasIcons!) }
+        { this._renderSplitDivider(item) }
+        { this._renderSplitIconButton(item, classNames, index) }
       </div >
     );
   }
@@ -111,7 +93,8 @@ export class ContextualMenuSplitButton extends BaseComponent<IContextualMenuSpli
       checked: item.checked,
       icon: item.icon,
       iconProps: item.iconProps,
-      'data-is-focusable': false
+      'data-is-focusable': false,
+      'aria-hidden': true
     } as IContextualMenuItem;
     return React.createElement('button',
       getNativeProps(itemProps, buttonProperties),
@@ -153,7 +136,8 @@ export class ContextualMenuSplitButton extends BaseComponent<IContextualMenuSpli
         onMouseLeave: onItemMouseLeave ? onItemMouseLeave.bind(this, item) : undefined,
         onMouseDown: (ev: any) => onItemMouseDown ? onItemMouseDown(item, ev) : undefined,
         onMouseMove: onItemMouseMove ? this._onItemMouseMove.bind(this, item) : undefined,
-        'data-is-focusable': false
+        'data-is-focusable': false,
+        'aria-hidden': true
       }),
       <ChildrenRenderer item={ itemProps } classNames={ classNames } index={ index } hasIcons={ false } />
     );
@@ -190,14 +174,16 @@ export class ContextualMenuSplitButton extends BaseComponent<IContextualMenuSpli
   }
 
   private _onItemMouseEnter = (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>): void => {
-    if (this.props.onItemMouseEnter) {
-      this.props.onItemMouseEnter(item, ev, this._splitButton);
+    const { onItemMouseEnter } = this.props;
+    if (onItemMouseEnter) {
+      onItemMouseEnter(item, ev, this._splitButton);
     }
   }
 
   private _onItemMouseMove = (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>): void => {
-    if (this.props.onItemMouseMove) {
-      this.props.onItemMouseMove(item, ev, this._splitButton);
+    const { onItemMouseMove } = this.props;
+    if (onItemMouseMove) {
+      onItemMouseMove(item, ev, this._splitButton);
     }
   }
 

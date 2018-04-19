@@ -78,12 +78,12 @@ export interface IContextualMenuSplitButtonProps extends React.Props<ContextualM
   executeItemClick?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => void;
 
   /**
-   * Callback for when the click event on the icon button from the split button
+   * Callback for when the click event on the icon button from the split button.
    */
   onItemClick?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => void;
 
   /**
-   * Callback for when the click event on the icon button which also takes in a specific HTMLElement that will be focused on
+   * Callback for when the click event on the icon button which also takes in a specific HTMLElement that will be focused.
    */
   onItemClickBase?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, target: HTMLElement) => void;
 
