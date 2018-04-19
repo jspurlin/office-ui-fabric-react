@@ -37,13 +37,13 @@ export interface IContextualMenuSplitButtonProps extends React.Props<ContextualM
   hasIcons?: boolean;
   contextualMenuItemAs?: React.ComponentClass<IContextualMenuItemProps> | React.StatelessComponent<IContextualMenuItemProps>;
   onItemMouseEnter?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>, target: HTMLElement) => boolean | void;
-  onItemMouseLeave?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>) => boolean | void;
+  onItemMouseLeave?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>) => void;
   onItemMouseMove?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>, target: HTMLElement) => void;
   onItemMouseDown?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>) => void;
   executeItemClick?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => void;
   onItemClick?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) => void;
-  onItemClickBase?: (ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, target: HTMLElement) => void;
-  onItemKeyDown?: (ev: React.KeyboardEvent<HTMLElement>) => void;
+  onItemClickBase?: (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, target: HTMLElement) => void;
+  onItemKeyDown?: (item: IContextualMenuItem, ev: React.KeyboardEvent<HTMLElement>) => void;
 }
 export interface IContextualMenuSplitButtonState {
   menuProps?: IContextualMenuProps | null;
@@ -88,7 +88,7 @@ export class ContextualMenuSplitButton extends BaseComponent<IContextualMenuSpli
         aria-checked={ item.isChecked || item.checked }
         aria-posinset={ focusableElementIndex + 1 }
         aria-setsize={ totalItemCount }
-        onMouseEnter={ onItemMouseEnter ? this._onItemMouseEnter.bind(this, { ...item, subMenuProps: null, items: null }) : undefined }
+        onMouseEnter={ this._onItemMouseEnter.bind(this, { ...item, subMenuProps: null, items: null }) }
         onMouseLeave={ onItemMouseLeave ? onItemMouseLeave.bind(this, { ...item, subMenuProps: null, items: null }) : undefined }
         onMouseMove={ onItemMouseMove ? this._onItemMouseMove.bind(this, { ...item, subMenuProps: null, items: null }) : undefined }
         onKeyDown={ this._onItemKeyDown.bind(this, item) }
@@ -177,13 +177,13 @@ export class ContextualMenuSplitButton extends BaseComponent<IContextualMenuSpli
     );
   }
 
-  private _onTouchStart: () => void = () => {
+  private _onTouchStart = (): void => {
     if (this._splitButton && !('onpointerdown' in this._splitButton)) {
       this._handleTouchAndPointerEvent();
     }
   }
 
-  private _onPointerDown(ev: PointerEvent) {
+  private _onPointerDown = (ev: PointerEvent): void => {
     if (ev.pointerType === 'touch') {
       this._handleTouchAndPointerEvent();
 
@@ -207,26 +207,26 @@ export class ContextualMenuSplitButton extends BaseComponent<IContextualMenuSpli
     }, TouchIdleDelay);
   }
 
-  private _onItemMouseEnter(item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>) {
+  private _onItemMouseEnter = (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>): void => {
     if (this.props.onItemMouseEnter) {
       this.props.onItemMouseEnter(item, ev, this._splitButton);
     }
   }
 
-  private _onItemMouseMove(item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>) {
+  private _onItemMouseMove = (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>): void => {
     if (this.props.onItemMouseMove) {
       this.props.onItemMouseMove(item, ev, this._splitButton);
     }
   }
 
-  private _onSplitItemClick(item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>) {
+  private _onSplitItemClick = (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>): void => {
     const { onItemClickBase } = this.props;
     if (onItemClickBase) {
       onItemClickBase(item, ev, (this._splitButton ? this._splitButton : ev.currentTarget) as HTMLElement);
     }
   }
 
-  private _executeItemClick(item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) {
+  private _executeItemClick = (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>): void => {
     const {
       onItemClick,
       executeItemClick
@@ -245,14 +245,14 @@ export class ContextualMenuSplitButton extends BaseComponent<IContextualMenuSpli
     }
   }
 
-  private _onItemKeyDown(item: any, ev: React.KeyboardEvent<HTMLElement>) {
+  private _onItemKeyDown = (item: any, ev: React.KeyboardEvent<HTMLElement>): void => {
     const { onItemKeyDown } = this.props;
     if (ev.which === KeyCodes.enter) {
       this._executeItemClick(item, ev);
       ev.preventDefault();
       ev.stopPropagation();
     } else if (onItemKeyDown) {
-      onItemKeyDown(ev);
+      onItemKeyDown(item, ev);
     }
   }
 }

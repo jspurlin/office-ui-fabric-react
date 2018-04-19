@@ -589,8 +589,6 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
     hasCheckmarks?: boolean,
     hasIcons?: boolean): JSX.Element {
 
-    // TODO need to pass in the childrenrenderer
-
     const { contextualMenuItemAs } = this.props;
     return (
       <ContextualMenuSplitButton
@@ -602,15 +600,14 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
         hasCheckmarks={ hasCheckmarks }
         hasIcons={ hasIcons }
         contextualMenuItemAs={ contextualMenuItemAs }
-        onItemMouseEnter={ this._onItemMouseEnterBase.bind(this, item) }
-        onItemMouseLeave={ this._onMouseItemLeave.bind(this, item) }
-        onItemMouseMove={ this._onItemMouseMoveBase.bind(this, item) }
-        onItemMouseDown={ this._onItemMouseDown.bind(this, item) }
-        executeItemClick={ this._executeItemClick.bind(this, item) }
-        onItemClick={ this._onItemClick.bind(this, item) }
-        onItemClickBase={ (ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, target: HTMLElement) => this._onItemClickBase(item, ev, target) }
-        onItemKeyDown={ (ev: React.KeyboardEvent<HTMLElement>) => this._onItemKeyDown(item, ev) }
-        data-is-focusable={ true }
+        onItemMouseEnter={ this._onItemMouseEnterBase }
+        onItemMouseLeave={ this._onMouseItemLeave }
+        onItemMouseMove={ this._onItemMouseMoveBase }
+        onItemMouseDown={ this._onItemMouseDown }
+        executeItemClick={ this._executeItemClick }
+        onItemClick={ this._onItemClick }
+        onItemClickBase={ this._onItemClickBase }
+        onItemKeyDown={ this._onItemKeyDown }
       />
     );
   }
@@ -709,7 +706,7 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
     this._onItemMouseEnterBase(item, ev, ev.target as HTMLElement);
   }
 
-  private _onItemMouseEnterBase(item: any, ev: React.MouseEvent<HTMLElement>, target: HTMLElement) {
+  private _onItemMouseEnterBase = (item: any, ev: React.MouseEvent<HTMLElement>, target: HTMLElement): void => {
     if (!this._isScrollIdle) {
       return;
     }
@@ -721,7 +718,7 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
     this._onItemMouseMoveBase(item, ev, ev.target as HTMLElement);
   }
 
-  private _onItemMouseMoveBase(item: any, ev: React.MouseEvent<HTMLElement>, target: HTMLElement) {
+  private _onItemMouseMoveBase = (item: any, ev: React.MouseEvent<HTMLElement>, target: HTMLElement): void => {
 
     const targetElement = ev.currentTarget as HTMLElement;
 
@@ -799,17 +796,17 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
     }
   }
 
-  private _onItemMouseDown(item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>) {
+  private _onItemMouseDown = (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement>): void => {
     if (item.onMouseDown && this._enterTimerId === undefined) {
       item.onMouseDown(item, ev);
     }
   }
 
-  private _onItemClick(item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) {
+  private _onItemClick = (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>): void => {
     this._onItemClickBase(item, ev, ev.currentTarget as HTMLElement);
   }
 
-  private _onItemClickBase(item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, target: HTMLElement) {
+  private _onItemClickBase = (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>, target: HTMLElement): void => {
     const items = getSubmenuItems(item);
 
     // Cancel a async menu item hover timeout action from being taken and instead
@@ -837,7 +834,7 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
     ev.stopPropagation();
   }
 
-  private _executeItemClick(item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>) {
+  private _executeItemClick = (item: IContextualMenuItem, ev: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>): void => {
     if (item.disabled || item.isDisabled) {
       return;
     }
@@ -855,7 +852,7 @@ export class ContextualMenu extends BaseComponent<IContextualMenuProps, IContext
     (dismiss || !ev.defaultPrevented) && this.dismiss(ev, true);
   }
 
-  private _onItemKeyDown(item: any, ev: React.KeyboardEvent<HTMLElement>) {
+  private _onItemKeyDown = (item: any, ev: React.KeyboardEvent<HTMLElement>): void => {
     const openKey = getRTL() ? KeyCodes.left : KeyCodes.right;
 
     if (ev.which === openKey && !item.disabled) {
